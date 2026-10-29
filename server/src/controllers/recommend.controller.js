@@ -8,6 +8,8 @@ import {
 import { normalizePlaceProfile } from "../utils/normalizer.js";
 import { comparePlacesWithGemini } from "../services/geminiCompare.service.js";
 
+import { generateGroundedRecommendations } from "../services/ragRecommendation.service.js";
+
 const normalizeType = (t) => {
   if (!t) return "restaurant";
   const cleaned = t
@@ -20,7 +22,7 @@ const normalizeType = (t) => {
 
 export const recommendPlaces = async (req, res) => {
   try {
-    const { previous_city, current_city, source_places } = req.body;
+    const { previous_city, current_city, source_places, query: customQuery } = req.body;
 
     if (!Array.isArray(source_places) || !source_places.length) {
       return res.status(400).json({ success: false, message: "source_places array required" });
@@ -95,9 +97,46 @@ export const recommendPlaces = async (req, res) => {
       });
     }
 
-    res.json({ success: true, results });
+    // Grounded RAG locality recommendations
+    let ragData = null;
+    try {
+      const ragQuery =
+        customQuery ||
+        `Neighborhoods matching lifestyle with favorite spots like ${source_places.map((p) => p.name).join(", ")}`;
+      ragData = await generateGroundedRecommendations({
+        query: ragQuery,
+        city: current_city?.name,
+        k: 4,
+        anchorCoordinates: currCoords,
+      });
+    } catch (ragErr) {
+      console.warn("⚠️ Grounded locality generation skipped in recommendPlaces:", ragErr.message);
+    }
+
+    res.json({
+      success: true,
+      results,
+      rag_localities: ragData?.recommendations || [],
+      followup_question: ragData?.followup_question || null,
+    });
   } catch (err) {
     console.error("❌ recommendPlaces ERROR:", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const recommendLocalities = async (req, res) => {
+  try {
+    const { query, city, k = 5, anchor_coordinates } = req.body;
+    const result = await generateGroundedRecommendations({
+      query: query || "Neighborhoods with vibrant cafes and good transit",
+      city,
+      k,
+      anchorCoordinates: anchor_coordinates,
+    });
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error("❌ recommendLocalities ERROR:", err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 };

@@ -75,15 +75,52 @@ export function updatePreferences(sessionId, newPrefs = {}) {
 }
 
 /**
+ * Get history turns
+ */
+export function getHistory(sessionId) {
+  const session = getOrCreateSession(sessionId);
+  return session.history;
+}
+
+/**
+ * Get current preferences
+ */
+export function getPreferences(sessionId) {
+  const session = getOrCreateSession(sessionId);
+  return session.preferences;
+}
+
+/**
+ * Generate a formatted textual summary of running preferences for LLM prompt context
+ */
+export function getSummary(sessionId) {
+  const prefs = getPreferences(sessionId);
+  const parts = [];
+  if (prefs.city) parts.push(`Target City: ${prefs.city}`);
+  if (prefs.budget) parts.push(`Budget: ${prefs.budget}`);
+  if (prefs.commute_limit) parts.push(`Commute: ${prefs.commute_limit}`);
+  if (prefs.amenities && prefs.amenities.length > 0) parts.push(`Amenities: ${prefs.amenities.join(", ")}`);
+  if (prefs.lifestyle && prefs.lifestyle.length > 0) parts.push(`Lifestyle: ${prefs.lifestyle.join(", ")}`);
+  if (typeof prefs.pets === "boolean") parts.push(`Pets: ${prefs.pets ? "Yes" : "No"}`);
+  if (typeof prefs.family === "boolean") parts.push(`Family: ${prefs.family ? "Yes" : "No"}`);
+  return parts.length > 0 ? parts.join(" | ") : "No explicit preferences recorded yet.";
+}
+
+/**
  * Clear session memory
  */
 export function clearSession(sessionId) {
   return sessions.delete(sessionId);
 }
 
-export default {
+export const memoryService = {
   getOrCreateSession,
   addTurn,
   updatePreferences,
+  getHistory,
+  getPreferences,
+  getSummary,
   clearSession,
 };
+
+export default memoryService;

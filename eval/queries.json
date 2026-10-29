@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "query": "Lively neighborhood with microbreweries and boutique cafes near Purple Line metro in Bangalore",
+    "city": "Bangalore",
+    "category": "lifestyle",
+    "expected_locality_ids": [1],
+    "target_attributes": ["cafes", "microbreweries", "metro", "nightlife"]
+  },
+  {
+    "id": 2,
+    "query": "Walkable commercial avenues with vibrant nightlife and fast commute via CMH Road or 100 Feet Road",
+    "city": "Bangalore",
+    "category": "transit_lifestyle",
+    "expected_locality_ids": [1],
+    "target_attributes": ["nightlife", "metro", "cafes"]
+  },
+  {
+    "id": 3,
+    "query": "Active evening culture for young tech professionals with well-lit streets and dining spots in Bangalore",
+    "city": "Bangalore",
+    "category": "safety_lifestyle",
+    "expected_locality_ids": [1],
+    "target_attributes": ["young tech professionals", "dining", "safety"]
+  },
+  {
+    "id": 4,
+    "query": "Rental apartment budget 40k to 60k near Indiranagar Purple Line metro station",
+    "city": "Bangalore",
+    "category": "budget_transit",
+    "expected_locality_ids": [1],
+    "target_attributes": ["metro", "rent: 35k-65k"]
+  },
+  {
+    "id": 5,
+    "query": "Trendy urban neighborhood in east-central Bangalore with artisan bakeries and fitness gyms",
+    "city": "Bangalore",
+    "category": "amenities",
+    "expected_locality_ids": [1],
+    "target_attributes": ["gyms", "cafes", "urban"]
+  },
+  {
+    "id": 6,
+    "query": "Upscale Bangalore area with bustling craft beer scene and direct metro connectivity to MG Road",
+    "city": "Bangalore",
+    "category": "lifestyle_transit",
+    "expected_locality_ids": [1],
+    "target_attributes": ["microbreweries", "metro"]
+  },
+  {
+    "id": 7,
+    "query": "Tree-lined streets with boutique coffee shops and community evening police patrols in Bangalore",
+    "city": "Bangalore",
+    "category": "safety_lifestyle",
+    "expected_locality_ids": [1],
+    "target_attributes": ["tree-lined", "cafes", "patrols"]
+  },
+  {
+    "id": 8,
+    "query": "Cosmopolitan social hub in Bangalore with high cafe density and quick metro rail access",
+    "city": "Bangalore",
+    "category": "lifestyle",
+    "expected_locality_ids": [1],
+    "target_attributes": ["cafes", "metro", "social"]
+  },
+  {
+    "id": 9,
+    "query": "Startup founder friendly neighborhood near Outer Ring Road with peaceful residential avenues in Bangalore",
+    "city": "Bangalore",
+    "category": "career_residential",
+    "expected_locality_ids": [2],
+    "target_attributes": ["startups", "Outer Ring Road", "residential"]
+  },
+  {
+    "id": 10,
+    "query": "Affordable 2BHK rental between 25k and 45k with neighborhood parks and supermarkets in south Bangalore",
+    "city": "Bangalore",
+    "category": "budget_family",
+    "expected_locality_ids": [2],
+    "target_attributes": ["rent: 25k-50k", "parks", "supermarkets"]
+  },
+  {
+    "id": 11,
+    "query": "Residential sector with wide streets, active resident security checkpoints, and quick drive to Hosur Road",
+    "city": "Bangalore",
+    "category": "safety_commute",
+    "expected_locality_ids": [2],
+    "target_attributes": ["security checkpoints", "Hosur Road"]
+  },
+  {
+    "id": 12,
+    "query": "Hub for tech startups and co-working spaces near upcoming Silk Board junction in Bangalore",
+    "city": "Bangalore",
+    "category": "startups_transit",
+    "expected_locality_ids": [2],
+    "target_attributes": ["startups", "Silk Board", "Outer Ring Road"]
+  },
+  {
+    "id": 13,
+    "query": "Quiet residential locality with neighborhood fitness centers, clinics, and daily grocery stores in Bangalore",
+    "city": "Bangalore",
+    "category": "amenities",
+    "expected_locality_ids": [2],
+    "target_attributes": ["parks", "gyms", "clinics", "supermarkets"]
+  },
+  {
+    "id": 14,
+    "query": "Balanced family neighborhood near Koramangala and Bellandur tech corridor with leafy parks",
+    "city": "Bangalore",
+    "category": "location_parks",
+    "expected_locality_ids": [2],
+    "target_attributes": ["parks", "residential", "Outer Ring Road"]
+  },
+  {
+    "id": 15,
+    "query": "Well-planned sectors in Bangalore favored by entrepreneurs with moderate rent around 35000",
+    "city": "Bangalore",
+    "category": "budget_startups",
+    "expected_locality_ids": [2],
+    "target_attributes": ["startups", "rent: 25k-50k"]
+  },
+  {
+    "id": 16,
+    "query": "Safe residential layout in Bangalore with community association vigilance and quick ORR connectivity",
+    "city": "Bangalore",
+    "category": "safety_transit",
+    "expected_locality_ids": [2],
+    "target_attributes": ["safety", "Outer Ring Road"]
+  },
+  {
+    "id": 17,
+    "query": "Major tech corridor in Bangalore with large gated apartment communities and international schools",
+    "city": "Bangalore",
+    "category": "family_tech",
+    "expected_locality_ids": [3],
+    "target_attributes": ["tech_parks", "schools", "gated communities"]
+  },
+  {
+    "id": 18,
+    "query": "Living near ITPL tech parks with Purple Line metro extension and multi-specialty hospitals",
+    "city": "Bangalore",
+    "category": "transit_healthcare",
+    "expected_locality_ids": [3],
+    "target_attributes": ["metro", "tech_parks", "hospitals"]
+  },
+  {
+    "id": 19,
+    "query": "Spacious high-rise gated society with 24/7 security guards and shopping malls in east Bangalore",
+    "city": "Bangalore",
+    "category": "gated_living",
+    "expected_locality_ids": [3],
+    "target_attributes": ["gated communities", "malls", "24/7 security"]
+  },
+  {
+    "id": 20,
+    "query": "Family relocation in Bangalore prioritizing top international curriculum schools and IT office proximity",
+    "city": "Bangalore",
+    "category": "education_commute",
+    "expected_locality_ids": [3],
+    "target_attributes": ["schools", "tech_parks"]
+  },
+  {
+    "id": 21,
+    "query": "Apartment rental around 30000 to 50000 near technology campuses and metro terminal in Bangalore",
+    "city": "Bangalore",
+    "category": "budget_tech",
+    "expected_locality_ids": [3],
+    "target_attributes": ["rent: 30k-55k", "metro", "tech_parks"]
+  },
+  {
+    "id": 22,
+    "query": "Suburban tech enclave in Bangalore with self-contained township amenities and modern shopping malls",
+    "city": "Bangalore",
+    "category": "amenities_malls",
+    "expected_locality_ids": [3],
+    "target_attributes": ["malls", "tech_parks"]
+  },
+  {
+    "id": 23,
+    "query": "Secure residential community for corporate IT families with operational metro line and medical centers",
+    "city": "Bangalore",
+    "category": "family_safety",
+    "expected_locality_ids": [3],
+    "target_attributes": ["security", "schools", "hospitals", "metro"]
+  },
+  {
+    "id": 24,
+    "query": "East Bangalore locality with heavy IT presence, major tech park campuses, and gated society living",
+    "city": "Bangalore",
+    "category": "tech_corridor",
+    "expected_locality_ids": [3],
+    "target_attributes": ["tech_parks", "gated communities"]
+  },
+  {
+    "id": 25,
+    "query": "Cosmopolitan seaside neighborhood in Mumbai with coastal promenade walks and heritage architecture",
+    "city": "Mumbai",
+    "category": "coastal_lifestyle",
+    "expected_locality_ids": [4],
+    "target_attributes": ["promenade", "heritage", "coastal"]
+  },
+  {
+    "id": 26,
+    "query": "Vibrant arts and culture district with seaside cafes, celebrity restaurants, and lively nightlife in Mumbai",
+    "city": "Mumbai",
+    "category": "lifestyle_nightlife",
+    "expected_locality_ids": [4],
+    "target_attributes": ["cafes", "restaurants", "nightlife"]
+  },
+  {
+    "id": 27,
+    "query": "Fast commute to South Mumbai and BKC via Bandra-Worli Sea Link and Western Railway line",
+    "city": "Mumbai",
+    "category": "transit_commute",
+    "expected_locality_ids": [4],
+    "target_attributes": ["Sea Link", "Western Railway"]
+  },
+  {
+    "id": 28,
+    "query": "Safe pedestrian neighborhood in Mumbai with well-policed promenades and active evening community",
+    "city": "Mumbai",
+    "category": "safety_walkability",
+    "expected_locality_ids": [4],
+    "target_attributes": ["safety", "police presence", "promenade"]
+  },
+  {
+    "id": 29,
+    "query": "High-end sea-facing apartment rental between 70000 and 120000 in Mumbai west coast",
+    "city": "Mumbai",
+    "category": "luxury_budget",
+    "expected_locality_ids": [4],
+    "target_attributes": ["rent: 60k-120k", "promenade"]
+  },
+  {
+    "id": 30,
+    "query": "Boutique espresso bars, artisan bakeries, and Portuguese heritage lanes in western suburbs of Mumbai",
+    "city": "Mumbai",
+    "category": "heritage_lifestyle",
+    "expected_locality_ids": [4],
+    "target_attributes": ["heritage", "cafes"]
+  },
+  {
+    "id": 31,
+    "query": "Fashionable creative hub in Mumbai with seaside jogging tracks and upscale dining options",
+    "city": "Mumbai",
+    "category": "lifestyle_fitness",
+    "expected_locality_ids": [4],
+    "target_attributes": ["promenade", "dining", "nightlife"]
+  },
+  {
+    "id": 32,
+    "query": "Well-connected coastal location with quick arterial highway and bridge access to south Mumbai business hubs",
+    "city": "Mumbai",
+    "category": "transit_location",
+    "expected_locality_ids": [4],
+    "target_attributes": ["Sea Link", "Western Railway"]
+  },
+  {
+    "id": 33,
+    "query": "Planned township with modern residential high-rises surrounding a scenic lake in Mumbai",
+    "city": "Mumbai",
+    "category": "township_scenic",
+    "expected_locality_ids": [5],
+    "target_attributes": ["lake", "modern high-rises", "planned township"]
+  },
+  {
+    "id": 34,
+    "query": "Apartment complex walking distance to IIT Bombay campus and corporate office parks in Mumbai",
+    "city": "Mumbai",
+    "category": "education_offices",
+    "expected_locality_ids": [5],
+    "target_attributes": ["IIT Bombay", "corporate offices", "tech_parks"]
+  },
+  {
+    "id": 35,
+    "query": "Modern self-contained enclave in Mumbai connected via JVLR Jogeshwari-Vikhroli Link Road",
+    "city": "Mumbai",
+    "category": "transit_township",
+    "expected_locality_ids": [5],
+    "target_attributes": ["JVLR", "supermarkets", "schools"]
+  },
+  {
+    "id": 36,
+    "query": "Secure private township with 24/7 CCTV surveillance, fitness centers, and reputed international schools in Mumbai",
+    "city": "Mumbai",
+    "category": "safety_family",
+    "expected_locality_ids": [5],
+    "target_attributes": ["CCTV", "schools", "gyms", "safety"]
+  },
+  {
+    "id": 37,
+    "query": "Rental flat with lake promenade view priced 45000 to 75000 near central Mumbai business district",
+    "city": "Mumbai",
+    "category": "budget_scenic",
+    "expected_locality_ids": [5],
+    "target_attributes": ["rent: 40k-80k", "lake"]
+  },
+  {
+    "id": 38,
+    "query": "Green serene lakeside residential complex suited for corporate executives and university professors in Mumbai",
+    "city": "Mumbai",
+    "category": "lifestyle_corporate",
+    "expected_locality_ids": [5],
+    "target_attributes": ["lake", "corporate offices", "schools"]
+  },
+  {
+    "id": 39,
+    "query": "Upscale urban township with European style architecture, wide sidewalks, and tech enterprise hubs in Mumbai",
+    "city": "Mumbai",
+    "category": "amenities_work",
+    "expected_locality_ids": [5],
+    "target_attributes": ["tech_parks", "supermarkets", "gyms"]
+  },
+  {
+    "id": 40,
+    "query": "Comprehensive family township in Mumbai with clean air, lakeside jogging, schools, and quick link to eastern/western expressways",
+    "city": "Mumbai",
+    "category": "family_transit",
+    "expected_locality_ids": [5],
+    "target_attributes": ["lake", "schools", "JVLR"]
+  }
+]

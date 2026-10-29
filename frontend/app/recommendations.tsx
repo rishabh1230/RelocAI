@@ -150,6 +150,22 @@ export default function recommendations() {
       data={places}
       keyExtractor={(_, index) => index.toString()}
       contentContainerStyle={{ padding: 12 }}
+      ListHeaderComponent={
+        <View style={styles.advisorBanner}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.advisorTitle}>💬 Need deeper neighborhood insights?</Text>
+            <Text style={styles.advisorSubtitle}>
+              Chat with RelocAI's RAG-powered advisor to refine recommendations by safety, amenities, and commute.
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.chatButton}
+            onPress={() => router.push("/chat")}
+          >
+            <Text style={styles.chatButtonText}>Open Chat</Text>
+          </TouchableOpacity>
+        </View>
+      }
       renderItem={({ item }) => {
         const similarity = getSimilarityPercentage(item);
 
@@ -223,6 +239,37 @@ export default function recommendations() {
 }
 
 const styles = StyleSheet.create({
+  advisorBanner: {
+    backgroundColor: '#312e81',
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  advisorTitle: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  advisorSubtitle: {
+    color: '#c7d2fe',
+    fontSize: 11,
+    lineHeight: 15,
+  },
+  chatButton: {
+    backgroundColor: '#4f46e5',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  chatButtonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 12,
+  },
   card: {
     backgroundColor: '#fff',
     borderRadius: 16,

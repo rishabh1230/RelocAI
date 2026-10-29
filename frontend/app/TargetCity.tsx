@@ -1,13 +1,12 @@
 import { Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import PlaceSearchBar from '../components/PlaceSearchBar'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Location from 'expo-location'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import RelocMap, { RelocMapRef } from '../components/RelocMap';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getCityFromCoord } from './utils/location';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { getCityFromCoord } from '../utils/location';
 
 const { width, height } = Dimensions.get("window");
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || "";
@@ -16,7 +15,7 @@ const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 export default function TargetCity() {
   const router = useRouter();
   const params = useLocalSearchParams(); // Access data from index and frequent-places
-  const mapRef = useRef<MapView | null>(null);
+  const mapRef = useRef<RelocMapRef | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [region, setRegion] = useState({
@@ -75,9 +74,8 @@ export default function TargetCity() {
   return (
     <View style={styles.container}>
       <View style={styles.searchBox}>
-        <GooglePlacesAutocomplete
+        <PlaceSearchBar
           placeholder='Search for Destination City'
-          fetchDetails={true}
           onPress={(data, details = null) => {
             if (!details) return;
             const { lat, lng } = details.geometry.location;
@@ -92,10 +90,9 @@ export default function TargetCity() {
         />
       </View>
 
-      <MapView
+      <RelocMap
         style={styles.map}
         region={region}
-        provider={PROVIDER_GOOGLE}
         ref={mapRef}
         onRegionChangeComplete={setRegion}
       />

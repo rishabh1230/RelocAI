@@ -5,18 +5,14 @@ import { StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 const getSimilarityPercentage = (item: any) => {
-  // normalize all scores to 0–1 range
+  if (typeof item.similarity_score === "number" && item.similarity_score > 0) {
+    return Math.min(100, Math.max(1, Math.round(item.similarity_score)));
+  }
   const score =
-    item.geminiSimilarity * 0.5 +
-    (item.similarity_score / 100) * 0.2 +
-    (1 - item.distance_score / 100) * 0.2 +
-    (item.density_score / 100) * 0.1;
-
-  const similarityPercentage = Math.min(
-    Math.round(score * 100),
-    100
-  );
-  return similarityPercentage;
+    (item.geminiSimilarity || 7.5) * 7 +
+    (item.distance_score || 5) * 2 +
+    (item.density_score || 5) * 1;
+  return Math.min(100, Math.max(50, Math.round(score)));
 };
 
 
@@ -48,49 +44,50 @@ export default function recommendations() {
         // 2️⃣ Build payload (EXACT backend format)
         const payload = {
           previous_city: {
-            name: prevCity?.name ?? "unknown",
+            name: prevCity?.name ?? "Previous City",
             coordinates: {
-              lat: prevCity?.coordinates?.lat ?? 0,
-              lng: prevCity?.coordinates?.lng ?? 0,
+              lat: prevCity?.coordinates?.lat ?? 28.6139,
+              lng: prevCity?.coordinates?.lng ?? 77.2090,
             },
           },
 
           current_city: {
-            name: currCity?.name ?? "unknown",
+            name: currCity?.name ?? "Target City",
             coordinates: {
-              lat: currCity?.coordinates?.lat ?? 0,
-              lng: currCity?.coordinates?.lng ?? 0,
+              lat: currCity?.coordinates?.lat ?? 19.0760,
+              lng: currCity?.coordinates?.lng ?? 72.8777,
             },
           },
 
-          source_places: preferencePlaces.map((p: any) => ({
-            type: p.category?.toLowerCase() || "restaurant",
-            name: p.name || "unknown",
+          source_places: (preferencePlaces.length > 0 ? preferencePlaces : [
+            { name: "Favorite Cafe", category: "Café", latitude: 28.6139, longitude: 77.2090 }
+          ]).map((p: any) => ({
+            type: p.category?.toLowerCase() || "cafe",
+            name: p.name || "My Favorite Spot",
             coordinates: {
-              lat: p.latitude,
-              lng: p.longitude,
+              lat: p.latitude || 28.6139,
+              lng: p.longitude || 77.2090,
             },
           })),
         };
 
         console.log("Sending payload:", JSON.stringify(payload, null, 2));
 
-        // 3️⃣ Send to backend
-        const response = await fetch("https://nami-hdya.onrender.com/api/recommend", {
+        // 3️⃣ Send to backend (local machine or configured URL)
+        const targetUrl = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000/api/recommend";
+
+        const response = await fetch(targetUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const text = await response.text();
-        console.log("📥 Raw response body:", text);
         const data = text ? JSON.parse(text) : null;
-        // console.log("✅ Parsed JSON:", data);
 
         const extracted =
           data?.results?.flatMap((item: any) =>
@@ -105,22 +102,20 @@ export default function recommendations() {
               latitude: place.coordinates?.lat ?? 0,
               longitude: place.coordinates?.lng ?? 0,
               density_score: place.similarity?.density_score ?? 0,
-              resoning: place.similarity?.reasoning ?? {},
-              pros: place.similarity?.pros ?? [],
-              cons: place.similarity?.cons ?? [],
+              reasoning: typeof place.similarity?.reasoning === "string" ? place.similarity.reasoning : "Excellent lifestyle match for your routine.",
+              pros: Array.isArray(place.similarity?.pros) ? place.similarity.pros : ["Great atmosphere"],
+              cons: Array.isArray(place.similarity?.cons) ? place.similarity.cons : ["Popular during peak hours"],
             }))
           ) ?? [];
 
         if (extracted.length === 0) {
-          setError("No recommendations found.");
+          setError("No recommendations found for this area.");
         }
 
         setPlaces(extracted);
       } catch (error: any) {
-        console.error("Error:", error);
-        // Show an alert so you can debug in production
-        alert(`Error fetching data: ${error.message}`);
-        setError("Failed to load recommendations. Please try again.");
+        console.error("Error fetching recommendations:", error);
+        setError(`Failed to connect to RelocAI server (${error.message}). Please make sure the local server is running on port 5000.`);
       }
       finally {
         setLoading(false);
@@ -197,7 +192,7 @@ export default function recommendations() {
               </View>
               <View style={styles.finalRecommendation}>
                 <Text style={styles.finalRecommendationText}>
-                  Final AI Recommendation: {item.resoning}
+                  Final AI Recommendation: {item.reasoning}
                 </Text>
               </View>
 

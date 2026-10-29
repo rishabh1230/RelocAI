@@ -21,7 +21,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": ${API_KEY}
+          "apiKey": ""
         }
       },
       "edgeToEdgeEnabled": true,

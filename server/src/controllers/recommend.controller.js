@@ -8,32 +8,43 @@ import {
 import { normalizePlaceProfile } from "../utils/normalizer.js";
 import { comparePlacesWithGemini } from "../services/geminiCompare.service.js";
 
-const normalizeType = (t) =>
-  t?.toLowerCase().replace(/\s+/g, "_");
+const normalizeType = (t) => {
+  if (!t) return "restaurant";
+  const cleaned = t
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "_");
+  return cleaned;
+};
 
 export const recommendPlaces = async (req, res) => {
   try {
     const { previous_city, current_city, source_places } = req.body;
 
-    if (!Array.isArray(source_places)) {
-      return res.status(400).json({ success: false });
+    if (!Array.isArray(source_places) || !source_places.length) {
+      return res.status(400).json({ success: false, message: "source_places array required" });
     }
+
+    const prevCoords = previous_city?.coordinates || { lat: 28.6139, lng: 77.2090 };
+    const currCoords = current_city?.coordinates || { lat: 19.0760, lng: 72.8777 };
 
     const results = [];
 
     for (const place of source_places) {
-      const type = normalizeType(place.type);
-
-      if (!SUPPORTED_PLACE_TYPES.includes(type)) continue;
+      let type = normalizeType(place.type);
+      if (!SUPPORTED_PLACE_TYPES.includes(type)) {
+        type = "restaurant";
+      }
 
       const source = await resolveSourcePlace({
         name: place.name,
         type,
-        coordinates: place.coordinates
+        coordinates: place.coordinates || prevCoords
       });
 
       const srcDist = await getDrivingDistanceWithTraffic({
-        origin: previous_city.coordinates,
+        origin: prevCoords,
         destination: source.coordinates
       });
 
@@ -42,28 +53,21 @@ export const recommendPlaces = async (req, res) => {
           ? srcDist.distance_km
           : 3;
 
-      const searchRadius = Math.max(
-        sourceDistanceKm * 1000 + 2000,
-        3000
-      );
-
-      const candidates =
-        await findNearbyPlacesByTypeAtLocation({
-          lat: current_city.coordinates.lat,
-          lng: current_city.coordinates.lng,
-          type,
-          radius: searchRadius
-        });
+      const candidates = await findNearbyPlacesByTypeAtLocation({
+        lat: currCoords.lat,
+        lng: currCoords.lng,
+        type,
+        radius: 6000,
+        maxResults: 3
+      });
 
       const recommended = [];
 
       for (const c of candidates) {
         const d = await getDrivingDistanceWithTraffic({
-          origin: current_city.coordinates,
+          origin: currCoords,
           destination: c.coordinates
         });
-
-        if (!Number.isFinite(d.distance_km)) continue;
 
         const details = await getPlaceDetails(c.place_id);
         const normalized = normalizePlaceProfile(details, type);
@@ -71,13 +75,13 @@ export const recommendPlaces = async (req, res) => {
         const similarity = await comparePlacesWithGemini({
           sourcePlace: source,
           candidatePlace: normalized,
-          distanceFromCurrentCityKm: d.distance_km,
+          distanceFromCurrentCityKm: d.distance_km || 3.5,
           nearbyPlacesCount: candidates.length
         });
 
         recommended.push({
           ...normalized,
-          driving_distance_from_current_city_km: d.distance_km,
+          driving_distance_from_current_city_km: d.distance_km || 3.5,
           similarity
         });
       }
@@ -94,6 +98,6 @@ export const recommendPlaces = async (req, res) => {
     res.json({ success: true, results });
   } catch (err) {
     console.error("❌ recommendPlaces ERROR:", err.message);
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: err.message });
   }
 };

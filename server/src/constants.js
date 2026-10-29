@@ -20,6 +20,7 @@ export const PLACE_DETAILS_FIELDS = [
 export const SUPPORTED_PLACE_TYPES = [
   "gym",
   "cafe",
+  "park",
   "hospital",
   "school",
   "restaurant"

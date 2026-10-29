@@ -9,13 +9,13 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import RelocMap, { RelocMapRef } from "../components/RelocMap";
 import * as Location from "expo-location";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import PlaceSearchBar from "../components/PlaceSearchBar";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getCityFromCoord } from "./utils/location";
+import { getCityFromCoord } from "../utils/location";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +25,7 @@ export default function SetLocationScreen() {
   const router = useRouter();
 
   // const params = useLocalSearchParams();
-  const mapRef = useRef<MapView | null>(null);
+  const mapRef = useRef<RelocMapRef | null>(null);
   const { mode, lat, lng, returnTo } = useLocalSearchParams();
   const isPlaceMode = mode === "place";
 
@@ -126,9 +126,11 @@ const getCurrentLocation = async () => {
 };
 
 const handleConfirm = async () => {
+  const targetPath = (Array.isArray(returnTo) ? returnTo[0] : returnTo) || "/frequent-places";
+
   //place mode - just go back
   if (isPlaceMode) {
-    router.push(returnTo || "/frequent-places");
+    router.push(targetPath as any);
     return;
   }
 
@@ -136,7 +138,7 @@ const handleConfirm = async () => {
   await savePreviousCity();
   // ✅ PICK MODE
   router.push({
-    pathname: returnTo || "/frequent-places",
+    pathname: targetPath as any,
     params: {
       latitude: String(region.latitude),
       longitude: String(region.longitude),
@@ -149,10 +151,8 @@ return (
     {/* Search bar */}
     {!isPlaceMode && (
       <View style={styles.searchBox}>
-        <GooglePlacesAutocomplete
-          placeholder="Search for a location"
-          fetchDetails
-          enablePoweredByContainer={false}
+        <PlaceSearchBar
+          placeholder="Search for a location or city"
           onPress={(data, details = null) => {
             if (!details) return;
             const { lat, lng } = details.geometry.location;
@@ -170,52 +170,19 @@ return (
             key: GOOGLE_MAPS_API_KEY,
             language: "en",
           }}
-          styles={{
-            textInputContainer: {
-              borderRadius: 28,
-              backgroundColor: "#FFFFFF",
-              paddingHorizontal: 10,
-              paddingVertical: Platform.OS === "ios" ? 10 : 0,
-              shadowColor: "#000",
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              shadowOffset: { width: 0, height: 2 },
-              elevation: 3,
-            },
-            textInput: {
-              height: 44,
-              borderRadius: 24,
-              fontSize: 16,
-              color: "#111827",
-            },
-            listView: {
-              backgroundColor: "#FFFFFF",
-              borderRadius: 12,
-              marginTop: 8,
-            },
-          }}
         />
       </View>
     )}
 
     {/* Map */}
-    <MapView
+    <RelocMap
       ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      mapType="standard"
       style={styles.map}
       region={region}
+      isPlaceMode={isPlaceMode}
+      pinCoordinate={isPlaceMode && lat && lng ? { latitude: Number(lat), longitude: Number(lng) } : null}
       onRegionChangeComplete={handleRegionChangeComplete}
-    >
-      {isPlaceMode && lat && lng && (
-        <Marker
-          coordinate={{
-            latitude: Number(lat),
-            longitude: Number(lng),
-          }}
-        />
-      )}
-    </MapView>
+    />
 
 
     {/* Center pin (overlay) */}

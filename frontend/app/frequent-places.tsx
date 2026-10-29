@@ -505,7 +505,4 @@ const styles = StyleSheet.create({
     color: "#9CA3AF",
   },
 });
-function setLocationSet(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
 
